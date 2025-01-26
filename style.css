@@ -1,3 +1,4 @@
+/* Global Styles for Dark Theme */
 body {
     display: flex;
     justify-content: center;
@@ -5,5 +6,53 @@ body {
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #000000;
-  }
+    background-color: #121212;
+}
+
+/* Container for buttons */
+#button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px;
+}
+
+/* Button Styles */
+button {
+    background-color: #333;
+    /* Dark button background */
+    color: #fff;
+    /* White text */
+    border: 2px solid #444;
+    /* Light border for contrast */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow */
+}
+
+/* Button Hover Effects */
+button:hover:enabled {
+    background-color: #555;
+    /* Slightly lighter on hover */
+    border-color: #666;
+    /* Lighter border on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Slightly stronger shadow on hover */
+}
+
+/* Button Focus Styles */
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px 2px rgba(0, 115, 255, 0.7);
+    /* Focus effect for accessibility */
+}
+
+/* Optional: Adding some spacing around the buttons */
+button+button {
+    margin-left: 10px;
+}
