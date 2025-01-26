@@ -1,15 +1,18 @@
 //import 'https://tomashubelbauer.github.io/github-pages-local-storage/index.js';
-async function list_directory(user, repo, directory) {
-    const url = `https://api.github.com/repos/${user}/${repo}/git/trees/master`;
-    const list = await fetch(url).then(res => res.json());
-    const dir = list.tree.find(node => node.path === directory);
-    if (dir) {
-       const list = await fetch(dir.url).then(res => res.json());
-       return list.tree.map(node => node.path);
-    }
-  }
+const basePath = "https://rtest42.github.io/vta-routle/lines";
 
-const images = list_directory("rtest42", "vta-routle", "main")
+// Fetch the JSON file
+fetch(`${basePath}routes.json`)
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Failed to fetch image list');
+  }
+  return response.json();
+})
+.then(images => {
+  if (images.length === 0) {
+    throw new Error('No images found in the list');
+  }
 
   // Get today's date and calculate an index
   const today = new Date();
@@ -17,4 +20,6 @@ const images = list_directory("rtest42", "vta-routle", "main")
 
   // Set the image source
   const randomImage = document.getElementById('randomImage');
-  randomImage.src = "./lines/" + images[index];
+  randomImage.src = basePath + images[index];
+})
+.catch(error => console.error('Error:', error));
