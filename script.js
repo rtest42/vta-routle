@@ -1,5 +1,5 @@
 //import 'https://tomashubelbauer.github.io/github-pages-local-storage/index.js';
-const basePath = "https://rtest42.github.io/vta-routle/lines";
+const basePath = "https://rtest42.github.io/vta-routle/lines/";
 
 // Fetch the JSON file
 fetch(`${basePath}routes.json`)
