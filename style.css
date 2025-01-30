@@ -1,58 +1,150 @@
-/* Global Styles for Dark Theme */
+/* General page styles for dark mode */
+html {
+    height: 100%;
+}
+
 body {
+    background-color: #181818;
+    /* Dark background */
+    color: #ffffff;
+    /* White text */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #181818;
+    /* Darker header */
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    height: 36px;
+}
+
+.img-header {
+    max-height: 100%;
+    width: auto;
+    background-size: contain;
+}
+
+h3 {
+    margin: 0;
+    font-size: 24px;
+    margin-left: 10px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #121212;
 }
 
-/* Container for buttons */
-#button-container {
+#map {
+    height: 70vh;
+    background-color: #181818;
+    width: 100%;
+}
+
+.button-container {
+    background-color: #181818;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin: 20px;
+    flex-wrap: wrap;
+    flex: 1;
+    height: auto;
+    overflow-y: scroll;
 }
 
-/* Button Styles */
-button {
-    background-color: #333;
-    /* Dark button background */
-    color: #fff;
-    /* White text */
-    border: 2px solid #444;
-    /* Light border for contrast */
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+/* Custom scrollbar */
+.button-container::-webkit-scrollbar {
+    width: 6px;
+    /* Make the scrollbar narrow */
+    position: absolute;
+    right: 0;
+    /* Position the scrollbar to the right */
+    top: 0;
+}
+
+.button-container::-webkit-scrollbar-track {
+    background: transparent;
+    /* Remove background behind the scrollbar */
+}
+
+.button-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    /* Set thumb color */
+    border-radius: 10px;
+    /* Rounded corners */
+}
+
+/* Optional: Hover effect on the thumb */
+.button-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.route-button {
+    background-color: #181818;
+    color: #ffffff;
+    border: 0 solid white;
+    border-bottom-width: thin;
+    width: 100%;
+    padding: 10px 0px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Subtle shadow */
+    font-size: 16px;
 }
 
-/* Button Hover Effects */
-button:hover:enabled {
-    background-color: #555;
-    /* Slightly lighter on hover */
-    border-color: #666;
-    /* Lighter border on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    /* Slightly stronger shadow on hover */
+.route-button:disabled {
+    color: gray;
+    cursor: auto;
 }
 
-/* Button Focus Styles */
-button:focus {
-    outline: none;
-    box-shadow: 0 0 5px 2px rgba(0, 115, 255, 0.7);
-    /* Focus effect for accessibility */
+.squares-container {
+    display: flex;
+    justify-content: center;
+    border: 0 solid white;
+    border-bottom-width: thin;
 }
 
-/* Optional: Adding some spacing around the buttons */
-button+button {
-    margin-left: 10px;
+.square {
+    width: 50px;
+    height: 50px;
+    background-color: #404040;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.share-button {
+    height: 50px;
+    background-color: #007BFF;
+    color: white;
+    display: flex;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 5px;
+    display: none;
+}
+
+.share-button:hover {
+    background-color: #0056b3;
+}
+
+.incorrect {
+    color: red;
+}
+
+.correct {
+    color: green;
 }
