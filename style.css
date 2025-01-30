@@ -1,13 +1,10 @@
-/* General page styles for dark mode */
 html {
     height: 100%;
 }
 
 body {
     background-color: #181818;
-    /* Dark background */
     color: #ffffff;
-    /* White text */
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -18,33 +15,34 @@ body {
 
 header {
     background-color: #181818;
-    /* Darker header */
     color: #ffffff;
     padding: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    height: 36px;
+    grid-template-columns: 1fr repeat(2, auto) 1fr;
+    display: grid;
+    justify-items: center;
+    height: 28px;
 }
 
-.img-header {
-    max-height: 100%;
+img {
+    margin: 0;
+    max-height: 28px;
     width: auto;
+    margin-right: 8px;
     background-size: contain;
+    grid-column-start: 2;
 }
 
 h3 {
     margin: 0;
     font-size: 24px;
-    margin-left: 10px;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+label {
+  margin-left: auto; /* Push the label to the far right */
 }
 
 #map {
-    height: 70vh;
+    height: 50vh;
     background-color: #181818;
     width: 100%;
 }
