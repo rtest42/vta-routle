@@ -2,12 +2,14 @@ import 'https://tomashubelbauer.github.io/github-pages-local-storage/index.js';
 
 
 const MAX_GUESSES = 5;
-const basePath = "https://rtest42.github.io/vta-routle";
+const URL = "https://rtest42.github.io/vta-routle";
 const SHAPES_FILE = "shapes.json";
-const CENTER_COORDS = [37.2228401, -121.7776057];
+const ROUTES_FILE = "routes.json";
+const CENTER_COORDS = [37.3340062,-121.8917829];
 
 let map;
 let routeLayers = {}; // Store GeoJSON layers for routes
+let routeMap = {}; // Store route names for route numbers
 let currentRoute;
 
 // Seed function Mulberry32 PRNG
@@ -19,13 +21,12 @@ function mulberry32(a) {
 }
 
 const date = new Date();
-const today = date.toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-const dateToInt = parseInt(today.replace(/-/g, "")); // Removes hyphens and convert string to integer
+const dateToInt = (date.getFullYear() % 100000) * 10000 + (date.getMonth() + 1) * 100 + date.getDate(); // Not actually a number that represents today's date but rather a unique number 
 
 function checkFirstVisit(inputDate) {
     const lastVisit = localStorage.getItem('lastVisit');
 
-    if (inputDate !== lastVisit) {
+    if (inputDate != lastVisit) {
         // User is visiting for the first time today
         localStorage.setItem('lastVisit', inputDate);
 
@@ -39,25 +40,28 @@ function checkFirstVisit(inputDate) {
 }
 
 // Call the function to check first visit
-checkFirstVisit(today);
+checkFirstVisit(dateToInt);
 
 const checkbox = document.getElementById("hard-mode");
 
 // Load routes from shapes.json
-fetch(`${SHAPES_FILE}`)
+fetch(ROUTES_FILE)
+    .then(response => response.json())
+    .then(data => {
+        routeMap = data;
+        return fetch(SHAPES_FILE);
+    })
     .then(response => response.json())
     .then(data => {
         // Create map
         map = L.map('map', {
             center: CENTER_COORDS,
             zoom: 11,
-            minZoom: 8,
-            maxZoom: 16,
             zoomControl: true,
-            dragging: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            touchZoom: false
+            dragging: true,
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            touchZoom: true
         });
 
         // Store the GeoJSON layers for each route
@@ -73,7 +77,7 @@ fetch(`${SHAPES_FILE}`)
                         "coordinates": coordinates
                     },
                     "properties": {
-                        "name": `${shapeId}`
+                        "name": shapeId
                     }
                 }]
             };
@@ -91,30 +95,28 @@ fetch(`${SHAPES_FILE}`)
         }
 
         // Select the route of the day
-        currentRoute = getRouteOfTheDay(Object.keys(routeLayers));
+        currentRoute = getRouteOfTheDay(Object.keys(routeMap));
 
         // Display the route on the map
-        routeLayers[currentRoute].addTo(map);
-
-        map.fitBounds(routeLayers[currentRoute].getBounds());
+        for (const key of Object.keys(routeLayers)) {
+            if (key.startsWith(`${currentRoute}_`)) {
+                routeLayers[key].addTo(map);
+            }
+        }
 
         // Create the route selection buttons
         const buttonContainer = document.getElementById('routeButtons');
         if (buttonContainer) {
-            for (const shapeId in routeLayers) {
+            for (const [key, value] of Object.entries(routeMap)) {
                 const button = document.createElement('button');
-                button.setAttribute("id", shapeId);
+                button.setAttribute("id", key);
                 if (localStorage.getItem("hard-mode")) {
-                    if (['B', 'G', 'O'].includes(shortenRoute(shapeId))) {
-                        button.textContent = shapeId.slice(0, shapeId.indexOf(" "));
-                    } else {
-                        button.textContent = shortenRoute(shapeId);
-                    }
+                    button.textContent = key;
                 } else {
-                    button.textContent = shapeId;
+                    button.textContent = `${key} ${value.trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`;
                 }
                 button.className = 'route-button';
-                button.onclick = () => checkGuess(shapeId);
+                button.onclick = () => checkGuess(key);
                 buttonContainer.appendChild(button);
             }
         }
@@ -124,15 +126,19 @@ fetch(`${SHAPES_FILE}`)
             const square = document.getElementById(`square${i}`);
             const guessedRoute = localStorage.getItem(`${i}`);
             if (square && guessedRoute) {
-                square.textContent = shortenRoute(guessedRoute);
+                square.textContent = guessedRoute;
                 if (guessedRoute == currentRoute) {
                     square.style.backgroundColor = 'green';
                 } else {
                     square.style.backgroundColor = 'red';
                     const button = document.getElementById(guessedRoute);
                     if (button) button.disabled = true;
-                    routeLayers[guessedRoute].setStyle({ color: 'red' });
-                    routeLayers[guessedRoute].addTo(map);
+                    for (const key of Object.keys(routeLayers)) {
+                        if (key.startsWith(`${guessedRoute}_`)) {
+                            routeLayers[key].setStyle({ color: 'red' });
+                            routeLayers[key].addTo(map);
+                        }
+                    }
                 }
             }
         }
@@ -156,25 +162,6 @@ function getRouteOfTheDay(routeIds) {
     return routeIds[randomIndex];
 }
 
-// Function to only get the route number or letter
-function shortenRoute(route) {
-    if (route == null) {
-        return "";
-    }
-
-    const spaceIndex1 = route.indexOf(' ');
-    const firstWord = route.slice(0, spaceIndex1);
-    const spaceIndex2 = route.indexOf(' ', spaceIndex1 + 1);
-    const secondWord = route.slice(spaceIndex1 + 1, spaceIndex2);
-    if (firstWord == 'Express' || firstWord == 'Rapid') {
-        return secondWord;
-    } else if (secondWord == 'Line') {
-        return firstWord[0];
-    } else {
-        return firstWord;
-    }
-}
-
 // Function to check if the user's guess is correct
 function checkGuess(guessedRoute) {
     // If the guess is correct, display the route and end the game
@@ -183,22 +170,26 @@ function checkGuess(guessedRoute) {
     const square = document.getElementById(`square${localStorage.getItem("guesses")}`);
     if (checkbox) checkbox.disabled = true;
     if (square) {
-        square.textContent = shortenRoute(guessedRoute);
+        square.textContent = guessedRoute;
         if (guessedRoute == currentRoute) {
             square.style.backgroundColor = 'green';
             localStorage.setItem("status", "win");
-            alert(`Correct! Today's route is ${currentRoute}`);
+            alert(`Correct! Today's route is ${currentRoute} ${routeMap[currentRoute].trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`);
             endGame();
         } else {
             square.style.backgroundColor = 'red';
             localStorage.setItem("status", "play");
             const button = document.getElementById(guessedRoute);
             if (button) button.disabled = true;
-            routeLayers[guessedRoute].setStyle({ color: 'red' });
-            routeLayers[guessedRoute].addTo(map);
+            for (const key of Object.keys(routeLayers)) {
+                if (key.startsWith(guessedRoute + '_')) {
+                    routeLayers[key].setStyle({ color: 'red' });
+                    routeLayers[key].addTo(map);
+                }
+            }
             if (localStorage.getItem("guesses") >= MAX_GUESSES) {
                 localStorage.setItem("status", "lose");
-                alert(`You ran out of guesses. Today's route is ${currentRoute}`);
+                alert(`You ran out of guesses. Today's route is ${currentRoute} ${routeMap[currentRoute].trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`);
                 endGame();
             }
         }
@@ -239,10 +230,10 @@ function shareResults() {
     for (let i = 0, n = localStorage.getItem("guesses"); i < n; ++i) {
         displayGuesses[i] = '🟥 ';
     }
-    if (localStorage.getItem("status") === "win") {
+    if (localStorage.getItem("status") == "win") {
         displayGuesses[localStorage.getItem("guesses") - 1] = '🟩 ';
     }
-    navigator.clipboard.writeText(`VTA Routle ${currentDate}${hardMode}\n${displayGuesses.join('')}\n\n${basePath}`);
+    navigator.clipboard.writeText(`VTA Historoutle ${currentDate}${hardMode}\n${displayGuesses.join('')}\n\n${URL}`);
     alert("Copied to clipboard!");
 }
 
@@ -253,16 +244,11 @@ function toggleHardMode() {
     const shapes = Object.keys(routeLayers);
     if (buttonContainer) {
         for (let i = 0; i < buttonContainer.length; ++i) {
-            const shapeId = shapes[i];
             const button = buttonContainer[i];
             if (checkbox.checked) {
-                if (['B', 'G', 'O'].includes(shortenRoute(shapeId))) {
-                    button.textContent = shapeId.slice(0, shapeId.indexOf(" "));
-                } else {
-                    button.textContent = shortenRoute(shapeId);
-                }
+                button.textContent = button.textContent.slice(0, button.textContent.indexOf(" "));
             } else {
-                button.textContent = shapeId;
+                button.textContent = `${button.textContent} ${routeMap[button.textContent].trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`;
             }
         }
     }
