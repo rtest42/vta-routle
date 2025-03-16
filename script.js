@@ -33,6 +33,7 @@ function checkFirstVisit(inputDate) {
         // Set game variables
         localStorage.setItem("guesses", 0);
         localStorage.setItem("status", "unplay");
+        localStorage.setItem("startTime", new Date());
         for (let i = 1; i <= MAX_GUESSES; ++i) {
             localStorage.setItem(`${i}`, null);
         }
@@ -198,6 +199,7 @@ function checkGuess(guessedRoute) {
 
 // Function to end the game
 function endGame() {
+    localStorage.setItem("endTime", new Date());
     const buttons = document.querySelectorAll('.button-container .route-button');
     if (buttons.length) {
         buttons.forEach(button => {
@@ -226,6 +228,10 @@ function shareResults() {
     if (localStorage.getItem("hard-mode")) {
         hardMode = " - Hard Mode";
     }
+    let time = "";
+    if (localStorage.getItem("status") == 'win') {
+        time = ` - ${(localStorage.getItem("endTime") - localStorage.getItem("startTime")) / 1000}s`;
+    }
     let displayGuesses = ['⬛ ', '⬛ ', '⬛ ', '⬛ ', '⬛ '];
     for (let i = 0, n = localStorage.getItem("guesses"); i < n; ++i) {
         displayGuesses[i] = '🟥 ';
@@ -233,7 +239,7 @@ function shareResults() {
     if (localStorage.getItem("status") == "win") {
         displayGuesses[localStorage.getItem("guesses") - 1] = '🟩 ';
     }
-    navigator.clipboard.writeText(`VTA Historoutle ${currentDate}${hardMode}\n${displayGuesses.join('')}\n\n${URL}`);
+    navigator.clipboard.writeText(`VTA Historoutle ${currentDate}${hardMode}${time}\n${displayGuesses.join('')}\n\n${URL}`);
     alert("Copied to clipboard!");
 }
 
