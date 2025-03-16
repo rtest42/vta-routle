@@ -33,7 +33,7 @@ function checkFirstVisit(inputDate) {
         // Set game variables
         localStorage.setItem("guesses", 0);
         localStorage.setItem("status", "unplay");
-        localStorage.setItem("startTime", new Date());
+        localStorage.setItem("startTime", performance.now());
         for (let i = 1; i <= MAX_GUESSES; ++i) {
             localStorage.setItem(`${i}`, null);
         }
@@ -174,7 +174,7 @@ function checkGuess(guessedRoute) {
         square.textContent = guessedRoute;
         if (guessedRoute == currentRoute) {
             square.style.backgroundColor = 'green';
-            localStorage.setItem("endTime", new Date());
+            localStorage.setItem("endTime", performance.now());
             localStorage.setItem("status", "win");
             alert(`Correct! Today's route is ${currentRoute} ${routeMap[currentRoute].trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`);
             endGame();
@@ -230,7 +230,7 @@ function shareResults() {
     }
     let time = "";
     if (localStorage.getItem("status") == 'win') {
-        time = ` - ${(new Date(localStorage.getItem("endTime")) - new Date(localStorage.getItem("startTime"))) / 1000}s`;
+        time = ` - ${(localStorage.getItem("endTime") - localStorage.getItem("startTime")) / 1000}s`;
     }
     let displayGuesses = ['⬛ ', '⬛ ', '⬛ ', '⬛ ', '⬛ '];
     for (let i = 0, n = localStorage.getItem("guesses"); i < n; ++i) {
