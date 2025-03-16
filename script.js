@@ -231,7 +231,9 @@ function shareResults() {
     let time = "";
     if (localStorage.getItem("status") == 'win') {
         let elapsedTime = localStorage.getItem("endTime") - localStorage.getItem("startTime");
-        time = ` - ${elapsedTime.toFixed(3)}ms`;
+        let elapsedTimeS = elapsedTime / 1000;
+        let elapsedTimeMS = elapsedTime % 1000;
+        time = ` - ${elapsedTimeS}.${elapsedTimeMS.toFixed(0)}s`;
     }
     let displayGuesses = ['⬛ ', '⬛ ', '⬛ ', '⬛ ', '⬛ '];
     for (let i = 0, n = localStorage.getItem("guesses"); i < n; ++i) {
