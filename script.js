@@ -174,6 +174,7 @@ function checkGuess(guessedRoute) {
         square.textContent = guessedRoute;
         if (guessedRoute == currentRoute) {
             square.style.backgroundColor = 'green';
+            localStorage.setItem("endTime", new Date());
             localStorage.setItem("status", "win");
             alert(`Correct! Today's route is ${currentRoute} ${routeMap[currentRoute].trim().toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase())}`);
             endGame();
@@ -199,7 +200,6 @@ function checkGuess(guessedRoute) {
 
 // Function to end the game
 function endGame() {
-    localStorage.setItem("endTime", new Date());
     const buttons = document.querySelectorAll('.button-container .route-button');
     if (buttons.length) {
         buttons.forEach(button => {
