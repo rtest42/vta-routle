@@ -230,7 +230,7 @@ function shareResults() {
     }
     let time = "";
     if (localStorage.getItem("status") == 'win') {
-        time = ` - ${(localStorage.getItem("endTime") - localStorage.getItem("startTime")) / 1000}s`;
+        time = ` - ${(new Date(localStorage.getItem("endTime")) - new Date(localStorage.getItem("startTime"))) / 1000}s`;
     }
     let displayGuesses = ['⬛ ', '⬛ ', '⬛ ', '⬛ ', '⬛ '];
     for (let i = 0, n = localStorage.getItem("guesses"); i < n; ++i) {
