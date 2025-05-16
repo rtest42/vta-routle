@@ -24,10 +24,9 @@ header {
 }
 
 img {
-    margin: 0;
     max-height: 28px;
     width: auto;
-    margin-right: 8px;
+    margin: 0 8px 0 0;
     background-size: contain;
     grid-column-start: 2;
 }
@@ -90,7 +89,7 @@ label {
     border: 0 solid white;
     border-bottom-width: thin;
     width: 100%;
-    padding: 10px 0px;
+    padding: 10px 0;
     cursor: pointer;
     font-size: 16px;
 }
@@ -124,7 +123,6 @@ label {
     height: 50px;
     background-color: #007BFF;
     color: white;
-    display: flex;
     border: none;
     border-radius: 5px;
     justify-content: center;

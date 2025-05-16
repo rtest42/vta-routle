@@ -1,0 +1,21 @@
+{
+  "name": "vta-routle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "http-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rtest42/vta-routle.git"
+  },
+  "private": true,
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

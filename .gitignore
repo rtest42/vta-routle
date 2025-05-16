@@ -1,0 +1,12 @@
+# Node.js modules directory
+node_modules/
+
+# Temporary files created by editors
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+.env
