@@ -82,13 +82,8 @@ function initMap(shapes) {
             type: "FeatureCollection",
             features: [{
                 type: "Feature",
-                geometry: {
-                    type: "LineString",
-                    coordinates: coordinates
-                },
-                properties: {
-                    name: shapeID
-                }
+                geometry: { type: "LineString", coordinates: coordinates },
+                properties: { name: shapeID }
             }]
         };
 
@@ -116,7 +111,7 @@ function setupButtons() {
         button.id = key;
         button.className = 'route-button';
         button.onclick = () => checkGuess(key);
-        button.textContent = checkbox?.checked ? key : `${key} ${formatRouteName(value)}`;
+        button.textContent = (localStorage.getItem("hard-mode") === 'true') ? key : `${key} ${formatRouteName(value)}`;
         container.appendChild(button);
     }
 }
@@ -142,7 +137,7 @@ function loadGameState() {
     const state = localStorage.getItem("status");
     if (state === 'win' || state === 'lose') endGame();
     if (state !== 'unplay' && checkbox) checkbox.disabled = true;
-    if (checkbox) checkbox.checked = localStorage.getItem("hard-mode") === 'true';
+    if (checkbox) checkbox.checked = (localStorage.getItem("hard-mode") === 'true');
 }
 
 function colorRouteRed(routeID) {
@@ -242,7 +237,7 @@ function toggleHardMode() {
     if (!container) return;
 
     for (const btn of container.children) {
-        const key = btn.dataset.routeId;
+        const key = btn.dataset.routeID;
         btn.textContent = checked ? key : `${key} ${formatRouteName(routeMap[key])}`;
     }
 }
