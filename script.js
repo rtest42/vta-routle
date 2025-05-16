@@ -33,11 +33,13 @@ function checkFirstVisitOfTheDay(inputDate) {
         localStorage.setItem('lastVisit', inputDate.toString());
         localStorage.setItem("guesses", "0");
         localStorage.setItem("status", "unplay");
-        localStorage.setItem("startTime", performance.now().toString());
+        // localStorage.setItem("startTime", performance.now().toString()); // Moved to after all contents are loaded
         for (let i = 1; i <= MAX_GUESSES; ++i) {
             localStorage.setItem(`${i}`, "");
         }
+        return true;
     }
+    return false;
 }
 
 function formatRouteName(routeName) {
@@ -45,7 +47,7 @@ function formatRouteName(routeName) {
 }
 
 async function initGame() {
-    checkFirstVisitOfTheDay(dateToInt);
+    const isNewDay = checkFirstVisitOfTheDay(dateToInt);
 
     try {
         const routeRes = await fetch(ROUTES_URL);
@@ -62,6 +64,8 @@ async function initGame() {
     } catch (err) {
         console.error("Error loading JSON:", err);
     }
+    
+    return isNewDay;
 }
 
 function initMap(shapes) {
@@ -247,4 +251,11 @@ function toggleHardMode() {
 document.getElementById("share-button").addEventListener("click", shareResults);
 checkbox?.addEventListener("change", toggleHardMode);
 
-window.onload = async () => { await initGame(); };
+window.onload = async () => {
+    try {
+        const isNewDay = await initGame();
+        if (isNewDay) localStorage.setItem("startTime", performance.now().toString());
+    } catch (err) {
+        console.error(err);
+    }
+};
