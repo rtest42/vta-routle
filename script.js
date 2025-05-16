@@ -108,6 +108,7 @@ function setupButtons() {
     for (const [key, value] of Object.entries(routeMap)) {
         const button = document.createElement('button');
         button.dataset.routeID = key;
+        button.type = 'button';
         button.id = key;
         button.className = 'route-button';
         button.onclick = () => checkGuess(key);
