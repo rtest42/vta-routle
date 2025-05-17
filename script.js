@@ -210,13 +210,20 @@ async function shareResults() {
     const hardModeText = isHardMode ? " - Hard Mode" : "";
     const timeText = getTimeText(gameStatus);
     const guessDisplay = getGuessDisplay(gameStatus, guessCount);
+    const shareText = `VTA Historoutle ${currentDate}${hardModeText}${timeText}\n${guessDisplay}\n\n${URL}`;
 
     try {
-        await navigator.clipboard.writeText(`VTA Historoutle ${currentDate}${hardModeText}${timeText}\n${guessDisplay}\n\n${URL}`);
-        alert("Copied to clipboard!");
+        if (navigator.share) {
+            await navigator.share({ title: `VTA Routle ${currentDate} Results`, text: shareText });
+        } else if (navigator.clipboard) { // Fallback
+            await navigator.clipboard.writeText(shareText);
+            alert("Copied to clipboard!");
+        } else {
+            alert("Sharing and copying are not supported in this browser.");
+        }
     } catch (err) {
-        alert("Failed to copy text to clipboard!");
-        console.log(err);
+        alert("Failed to share or copy text.");
+        console.error(err);
     }
 }
 
