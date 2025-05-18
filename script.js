@@ -2,7 +2,7 @@ import 'https://tomashubelbauer.github.io/github-pages-local-storage/index.js';
 
 const MAX_GUESSES = 5;
 const URL = "https://rtest42.github.io/vta-routle";
-const SHAPES_URL = "shapes.json";
+const SHAPES_DIR = "shapes";
 const ROUTES_URL = "routes.json";
 const CENTER_COORDS = [37.3340062, -121.8917829];
 
@@ -52,12 +52,13 @@ async function initGame() {
     try {
         const routeRes = await fetch(ROUTES_URL);
         routeMap = await routeRes.json();
+        
+        currentRoute = getRouteOfTheDay(Object.keys(routeMap));
 
-        const shapesRes = await fetch(SHAPES_URL);
+        const shapesRes = await fetch(`${SHAPES_DIR}/${currentRoute}.json`);
         const shapeData = await shapesRes.json();
 
         initMap(shapeData);
-        currentRoute = getRouteOfTheDay(Object.keys(routeMap));
         drawCurrentRoute();
         setupButtons();
         loadGameState();
@@ -79,10 +80,14 @@ function initMap(shapes) {
         touchZoom: true
     });
 
+    loadShape(shapes, 'blue');
+}
+
+function loadShape(shapes, clr) {
     for (const shapeID in shapes) {
         const coordinates = shapes[shapeID].map(([lat, lon]) => [lon, lat]);
 
-        const geoJSON= {
+        const geoJSON = {
             type: "FeatureCollection",
             features: [{
                 type: "Feature",
@@ -92,8 +97,10 @@ function initMap(shapes) {
         };
 
         routeLayers[shapeID] = L.geoJSON(geoJSON, {
-            style: { color: 'blue', weight: 3, opacity: 1 }
+            style: { color: clr, weight: 3, opacity: 1 }
         });
+
+        routeLayers[shapeID].addTo(map);
     }
 }
 
@@ -121,7 +128,7 @@ function setupButtons() {
     }
 }
 
-function loadGameState() {
+async function loadGameState() {
     const guesses = parseInt(localStorage.getItem("guesses") || "0")
     for (let i = 1; i <= guesses; ++i) {
         const square = document.getElementById(`square${i}`);
@@ -134,7 +141,13 @@ function loadGameState() {
                 square.style.backgroundColor = 'red';
                 const btn = document.getElementById(guessedRoute);
                 if (btn) btn.disabled = true;
-                colorRouteRed(guessedRoute);
+                try {
+                    const shapesRes = await fetch(`${SHAPES_DIR}/${guessedRoute}.json`);
+                    const shapeData = await shapesRes.json();
+                    loadShape(shapeData, 'red');
+                } catch (err) {
+                    console.error("Failed to load route", err);
+                }
             }
         }
     }
@@ -145,16 +158,7 @@ function loadGameState() {
     if (checkbox) checkbox.checked = (localStorage.getItem("hard-mode") === 'true');
 }
 
-function colorRouteRed(routeID) {
-    for (const key in routeLayers) {
-        if (key.startsWith(`${routeID}_`)) {
-            routeLayers[key].setStyle({ color: 'red' });
-            routeLayers[key].addTo(map);
-        }
-    }
-}
-
-function checkGuess(guessedRoute) {
+async function checkGuess(guessedRoute) {
     const guessNum = parseInt(localStorage.getItem("guesses") || "0") + 1;
     const displayRoute = `${currentRoute} ${formatRouteName(routeMap[currentRoute])}`;
     localStorage.setItem("guesses", guessNum.toString());
@@ -175,12 +179,18 @@ function checkGuess(guessedRoute) {
         localStorage.setItem("status", "play");
         const btn = document.getElementById(guessedRoute);
         if (btn) btn.disabled = true;
-        colorRouteRed(guessedRoute);
-
-        if (guessNum >= MAX_GUESSES) {
-            localStorage.setItem("status", "lose");
-            alert(`You ran out of guesses. Today's route is ${displayRoute}`);
-            endGame();
+        try {
+            const shapesRes = await fetch(`${SHAPES_DIR}/${guessedRoute}.json`);
+            const shapeData = await shapesRes.json();
+            loadShape(shapeData, 'red');
+        } catch (err) {
+            console.error("Failed to load route", err);
+        } finally {
+            if (guessNum >= MAX_GUESSES) {
+                localStorage.setItem("status", "lose");
+                alert(`You ran out of guesses. Today's route is ${displayRoute}`);
+                endGame();
+            }
         }
     }
 }
