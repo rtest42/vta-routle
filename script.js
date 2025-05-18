@@ -61,7 +61,7 @@ async function initGame() {
         initMap(shapeData);
         drawCurrentRoute();
         setupButtons();
-        loadGameState();
+        await loadGameState();
     } catch (err) {
         console.error("Error loading JSON:", err);
     }
