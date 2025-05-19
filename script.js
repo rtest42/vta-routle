@@ -211,7 +211,6 @@ function endGame() {
     }).addTo(map);
 }
 
-// Function to share results
 async function shareResults() {
     const currentDate = new Intl.DateTimeFormat(navigator.language).format(new Date());
     const isHardMode = localStorage.getItem("hard-mode") === 'true';
@@ -221,9 +220,10 @@ async function shareResults() {
     const timeText = getTimeText(gameStatus);
     const guessDisplay = getGuessDisplay(gameStatus, guessCount);
     const shareText = `VTA Historoutle ${currentDate}${hardModeText}${timeText}\n${guessDisplay}\n\n${URL}`;
+    const isMobile = localStorage.mobile || navigator.maxTouchPoints > 1;
 
     try {
-        if (navigator.share) {
+        if (navigator.share && isMobile) {
             await navigator.share({ title: `VTA Routle ${currentDate} Results`, text: shareText });
         } else if (navigator.clipboard) { // Fallback
             await navigator.clipboard.writeText(shareText);
