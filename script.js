@@ -220,7 +220,7 @@ async function shareResults() {
     const timeText = getTimeText(gameStatus);
     const guessDisplay = getGuessDisplay(gameStatus, guessCount);
     const shareText = `VTA Historoutle ${currentDate}${hardModeText}${timeText}\n${guessDisplay}\n\n${URL}`;
-    const isMobile = localStorage.mobile || navigator.maxTouchPoints > 1;
+    const isMobile = navigator.maxTouchPoints > 1;
 
     try {
         if (navigator.share && isMobile) {
