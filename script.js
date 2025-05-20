@@ -207,7 +207,7 @@ function endGame() {
     if (shareBtn) shareBtn.style.display = "block";
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors, &copy; CartoDB'
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }).addTo(map);
 }
 

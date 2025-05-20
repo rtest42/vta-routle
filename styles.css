@@ -17,18 +17,27 @@ header {
     background-color: #181818;
     color: #ffffff;
     padding: 10px;
-    grid-template-columns: 1fr repeat(2, auto) 1fr;
+    grid-template-columns: 1fr auto 1fr;
     display: grid;
     justify-items: center;
     height: 28px;
 }
 
+header a {
+    text-decoration: none;
+    background: inherit;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    grid-column: 2;
+}
+
 img {
     max-height: 28px;
     width: auto;
-    margin: 0 8px 0 0;
+    margin-right: 8px;
     background-size: contain;
-    grid-column-start: 2;
 }
 
 h3 {
@@ -37,7 +46,12 @@ h3 {
 }
 
 label {
-  margin-left: auto; /* Push the label to the far right */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1em;
+    flex-wrap: nowrap;
+    justify-self: self-end;
+    grid-column: 3;
 }
 
 #map {
@@ -56,29 +70,22 @@ label {
     overflow-y: scroll;
 }
 
-/* Custom scrollbar */
 .button-container::-webkit-scrollbar {
     width: 6px;
-    /* Make the scrollbar narrow */
     position: absolute;
     right: 0;
-    /* Position the scrollbar to the right */
     top: 0;
 }
 
 .button-container::-webkit-scrollbar-track {
     background: transparent;
-    /* Remove background behind the scrollbar */
 }
 
 .button-container::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.3);
-    /* Set thumb color */
     border-radius: 10px;
-    /* Rounded corners */
 }
 
-/* Optional: Hover effect on the thumb */
 .button-container::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
 }
@@ -107,8 +114,8 @@ label {
 }
 
 .square {
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
     background-color: #404040;
     color: white;
     display: flex;
@@ -120,7 +127,7 @@ label {
 }
 
 .share-button {
-    height: 50px;
+    height: 36px;
     background-color: #007BFF;
     color: white;
     border: none;
@@ -143,4 +150,27 @@ label {
 
 .correct {
     color: green;
+}
+
+.leaflet-control-container .leaflet-control-zoom .leaflet-control-zoom-in, 
+.leaflet-control-container .leaflet-control-zoom .leaflet-control-zoom-out {
+    background-color: black;
+    color: white;
+}
+
+.leaflet-control-container .leaflet-control-attribution {
+    background-color: transparent;
+    color: white;
+}
+
+.leaflet-control-container .leaflet-control-attribution a {
+    color: #4EA8FF;
+}
+
+.leaflet-control-container .leaflet-control-attribution a:hover {
+    color: #4EA8FF;
+}
+
+.leaflet-control-container .leaflet-control-attribution a:visited {
+    color: #4EA8FF;
 }
