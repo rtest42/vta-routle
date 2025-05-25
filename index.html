@@ -4,44 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <base href="https://rtest42.github.io/vta-routle/">
     <!-- Open Graph Meta Tags for Discord Link Preview -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Historoutle - VTA">
+    <meta property="og:title" content="Historoutle—VTA">
     <meta property="og:description" content="Test your historical knowledge of VTA">
-    <meta property="og:image" content="https://rtest42.github.io/vta-routle/icon.png">
+    <meta property="og:image" content="icon.png">
     <meta property="og:url" content="https://rtest42.github.io/vta-routle">
     <meta property="og:site_name" content="VTA Routle">
     <title>VTA Historoutle</title>
-
     <!-- Include Leaflet CSS and JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="icon.png">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
-
 <body>
     <header>
-        <a href="https://rtest42.github.io/vta-routle">
+        <a href="#">
             <img src="icon.png" class="img-header" alt="logo">
             <h3>Historoutle</h3>
         </a>
         <label>
-            <input type="checkbox" id="hard-mode">Hard Mode
+            <label for="hard-mode">Hard Mode</label>
+            <input type="checkbox" name="hard-mode" id="hard-mode">
         </label>
     </header>
     <div id="map"></div>
     <div class="squares-container">
-        <div class="square" id="square1"></div>
-        <div class="square" id="square2"></div>
-        <div class="square" id="square3"></div>
-        <div class="square" id="square4"></div>
-        <div class="square" id="square5"></div>
+        <div class="square" id="square-1"></div>
+        <div class="square" id="square-2"></div>
+        <div class="square" id="square-3"></div>
+        <div class="square" id="square-4"></div>
+        <div class="square" id="square-5"></div>
         <button class="share-button" id="share-button" type="button">Share</button>
     </div>
-    <div class="button-container" id="routeButtons"></div>
-    <script type="module" src="script.js"></script>
+    <div class="button-container" id="route-buttons"></div>
+    <script type="module" src="js/main.js"></script>
 </body>
-
 </html>
