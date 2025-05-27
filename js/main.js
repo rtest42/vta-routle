@@ -1,3 +1,4 @@
+import 'https://tomashubelbauer.github.io/github-pages-local-storage/index.js';
 import { initGame } from './game.js';
 
 window.onload = async () => {
